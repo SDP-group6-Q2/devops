@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -31,9 +31,15 @@ services:
       FIRST_SUPERUSER_PASSWORD: ${FIRST_SUPERUSER_PASSWORD}
       FIRST_SUPERUSER_USERNAME: ${FIRST_SUPERUSER_USERNAME}
       FIRST_SUPERUSER_CLIENT_NAME: ${FIRST_SUPERUSER_CLIENT_NAME}
-      LLAMA_MODEL: "gpt-oss:20b-cloud"
+      LLAMA_MODEL: ${OLLAMA_MODEL:-gpt-oss:20b-cloud}
       LLAMA_BASE_URL: http://host.docker.internal:11434
-      ASSISTANT_DB: "assistant"
+      ASSISTANT_DB: assistant
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      LANGSMITH_TRACING: ${LANGSMITH_TRACING}
+      LANGSMITH_ENDPOINT: ${LANGSMITH_ENDPOINT}
+      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY}
+      LANGSMITH_PROJECT: ${LANGSMITH_PROJECT}
     ports:
       - "8000:8000"
     volumes:
@@ -43,6 +49,3 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
-volumes:
-  db_data:
