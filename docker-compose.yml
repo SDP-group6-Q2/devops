@@ -40,6 +40,7 @@ services:
       LANGSMITH_ENDPOINT: ${LANGSMITH_ENDPOINT}
       LANGSMITH_API_KEY: ${LANGSMITH_API_KEY}
       LANGSMITH_PROJECT: ${LANGSMITH_PROJECT}
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET}
     ports:
       - "8000:8000"
     volumes:
@@ -49,3 +50,43 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mcp-server:
+        condition: service_started
+
+  mcp-server:
+    build:
+      context: ./mcp-server
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      ASSISTANT_DB: assistant
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET}
+    # No published host port -- reachable only from other containers on this
+    # network (api, for /internal/*; gateway, for /mcp). See app/middleware.py's
+    # own docstring: this boundary is what makes X-User-Id trustworthy at all.
+    volumes:
+      - ./mcp-server:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  gateway:
+    build:
+      context: ./mcp-server
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      MCP_SERVER_URL: http://mcp-server:9000
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./mcp-server:/app
+    command: ["uvicorn", "app.gateway:app", "--host", "0.0.0.0", "--port", "9001"]
+    depends_on:
+      - mcp-server
+
+volumes:
+  db_data:
