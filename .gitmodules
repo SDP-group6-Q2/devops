@@ -1,0 +1,12 @@
+[submodule "ai-orchestrator"]
+	path = ai-orchestrator
+	url = https://github.com/SDP-group6-Q2/ai-orchestrator.git
+[submodule "mcp"]
+	path = mcp
+	url = https://github.com/SDP-group6-Q2/mcp.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/SDP-group6-Q2/frontend.git
+[submodule "backend"]
+	path = backend
+	url = https://github.com/SDP-group6-Q2/backend.git
