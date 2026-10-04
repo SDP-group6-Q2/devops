@@ -28,8 +28,8 @@ services:
     environment:
       MCP_SERVER_URL: http://mcp-server:9000/mcp
       REFERENCE_DATE: ${REFERENCE_DATE:-2026-08-05}
-      LLAMA_MODEL: ${LLAMA_MODEL:-gpt-oss:20b-cloud}
-      LLAMA_BASE_URL: http://host.docker.internal:11434
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-4-5-20251001}
       # LangSmith tracing (opt-in: off unless LANGSMITH_TRACING=true)
       LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
       LANGSMITH_ENDPOINT: ${LANGSMITH_ENDPOINT:-https://api.smith.langchain.com}
@@ -37,8 +37,6 @@ services:
       LANGSMITH_PROJECT: ${LANGSMITH_PROJECT:-ai-orchestrator}
     expose:
       - "8001"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       - mcp-server
 
