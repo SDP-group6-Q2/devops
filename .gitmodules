@@ -4,6 +4,7 @@
 [submodule "mcp"]
 	path = mcp
 	url = https://github.com/SDP-group6-Q2/mcp.git
+	branch = main
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/SDP-group6-Q2/frontend.git
